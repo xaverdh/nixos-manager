@@ -1,13 +1,13 @@
 {-|
   Description: Contains all the state for the Packages tab
   -}
-module NixManager.Packages.State
+module NixManager.HMPackages.State
   ( State
   , initState
   )
 where
 
-import           NixManager.NixPackagesUtil     ( readPackageCache )
+import           NixManager.HMPackagesUtil      ( readPackageCache )
 import           NixManager.Util                ( TextualError
                                                 , ifSuccessIO
                                                 )

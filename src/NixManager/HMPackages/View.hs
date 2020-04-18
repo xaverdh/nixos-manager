@@ -3,22 +3,22 @@
 Contains the actual GUI (widgets) for the Packages tab
   -}
 {-# LANGUAGE FlexibleContexts #-}
-module NixManager.Packages.View
+module NixManager.HMPackages.View
   ( packagesBox
   )
 where
 
 import qualified NixManager.View.PackageEditView
                                                as PackageEditView
-import           NixManager.Packages.Event      ( Event(EventPackageEditView) )
+import           NixManager.HMPackages.Event    ( Event(EventPackageEditView) )
 import           Control.Lens                   ( (^.) )
-import           NixManager.ManagerState        ( msPackagesState )
+import           NixManager.ManagerState        ( msHMPackagesState )
 import           NixManager.ManagerEvent        ( ManagerEvent
-                                                  ( ManagerEventPackages
+                                                  ( ManagerEventHMPackages
                                                   )
                                                 )
 
 -- | The package list
 packagesBox s =
-  ManagerEventPackages . EventPackageEditView <$> PackageEditView.packagesBox
-    (s ^. msPackagesState)
+  ManagerEventHMPackages . EventPackageEditView <$> PackageEditView.packagesBox
+    (s ^. msHMPackagesState)

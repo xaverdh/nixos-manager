@@ -17,8 +17,6 @@ import           Control.Lens                   ( Iso'
 import           Data.List                      ( elemIndex )
 import           NixManager.NixRebuildMode      ( NixRebuildMode
                                                   ( NixRebuildSwitch
-                                                  , NixRebuildBoot
-                                                  , NixRebuildTest
                                                   , NixRebuildDryBuild
                                                   , NixRebuildDryActivate
                                                   )

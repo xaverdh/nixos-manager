@@ -12,11 +12,8 @@ module NixManager.Admin.Update
   )
 where
 
-import Data.Foldable(for_)
-import           Control.Monad                  ( void )
 import           NixManager.PosixTools          ( kill )
 import qualified Data.ByteString.Char8         as BS
-import           Debug.Trace                    ( traceShowId )
 import           NixManager.Password            ( Password
                                                   ( Password
                                                   , getPassword
@@ -38,19 +35,16 @@ import           System.Exit                    ( ExitCode
                                                   )
                                                 )
 import           NixManager.Process             ( updateProcess
-                                                , runProcess
                                                 , runProcessToFinish
                                                 , poResult
-                                                , waitUntilFinished
                                                 , poStdout
-                                                , poStderr
                                                 , getProcessId
-                                                , terminate
                                                 )
 import           NixManager.Admin.State         ( State
                                                 , asChanges
                                                 , asRebuildData
                                                 , asGarbageData
+                                                , determineChanges
                                                 )
 import           NixManager.Admin.GarbageData   ( gdOlderGenerations
                                                 , gdBuildState
@@ -60,8 +54,6 @@ import           NixManager.Admin.GarbageData   ( gdOlderGenerations
 import           Data.Monoid                    ( getFirst )
 import           Control.Lens                   ( (^.)
                                                 , from
-                                                , folded
-                                                , (^?)
                                                 , traversed
                                                 , (<>~)
                                                 , (&)
@@ -69,7 +61,6 @@ import           Control.Lens                   ( (^.)
                                                 , to
                                                 , (.~)
                                                 , (+~)
-                                                , (^?!)
                                                 )
 import           NixManager.Admin.Event         ( Event
                                                   ( EventRebuild
@@ -98,12 +89,8 @@ import           NixManager.Admin.Event         ( Event
 import           NixManager.ManagerState        ( ManagerState(..)
                                                 , msAdminState
                                                 )
-import           NixManager.Util                ( threadDelayMillis
-                                                , showText
-                                                )
-import           NixManager.Changes             ( determineChanges
-                                                , ChangeType(NoChanges)
-                                                )
+import           NixManager.Util                ( threadDelayMillis )
+import           NixManager.ChangeType          ( ChangeType(NoChanges) )
 import           NixManager.AskPass             ( askPass
                                                 , sudoExpr
                                                 )
@@ -134,7 +121,6 @@ import           NixManager.Admin.BuildState    ( bsProcessData
                                                 , bsPassword
                                                 , BuildState(BuildState)
                                                 )
-import           NixManager.NixRebuildMode      ( rebuildModeIdx )
 import           NixManager.Admin.ValidRebuildModes
                                                 ( validRebuildModeIdx )
 
@@ -171,11 +157,15 @@ updateEvent ms _ EventGarbage = Transition
   ms
   (adminEvent . EventAskPassWatch EventGarbageWithPassword mempty <$> askPass)
 updateEvent ms _ EventRebuildCancel =
-  Transition (ms & msAdminState . asRebuildData . rdBuildState .~ Nothing) $
-    maybe (pure Nothing) sudoKillProcess (ms ^. msAdminState . asRebuildData . rdBuildState)
+  Transition (ms & msAdminState . asRebuildData . rdBuildState .~ Nothing)
+    $ maybe (pure Nothing)
+            sudoKillProcess
+            (ms ^. msAdminState . asRebuildData . rdBuildState)
 updateEvent ms _ EventGarbageCancel =
-  Transition (ms & msAdminState . asGarbageData . gdBuildState .~ Nothing) $
-    maybe (pure Nothing) sudoKillProcess (ms ^. msAdminState . asGarbageData . gdBuildState)
+  Transition (ms & msAdminState . asGarbageData . gdBuildState .~ Nothing)
+    $ maybe (pure Nothing)
+            sudoKillProcess
+            (ms ^. msAdminState . asGarbageData . gdBuildState)
 updateEvent ms _ (EventGarbageWithPassword password) = Transition ms $ do
   garbagePo <- collectGarbage
     (ms ^. msAdminState . asGarbageData . gdOlderGenerations)

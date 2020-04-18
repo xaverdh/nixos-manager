@@ -24,10 +24,8 @@ import           Data.Text                      ( Text )
 import           NixManager.NixServiceOption    ( readOptionsFile
                                                 , locateOptionsFile
                                                 )
-import           NixManager.NixService          ( makeServices
-                                                , readLocalServiceFile
-                                                )
-import           NixManager.Util                ( TextualError )
+import           NixManager.NixService          ( makeServices )
+import           NixManager.NixServicesUtil     ( readLocalServiceFile )
 
 -- | This contains the all data for the state “we’re currently downloading the services file”
 data StateDownloadingData = StateDownloadingData {

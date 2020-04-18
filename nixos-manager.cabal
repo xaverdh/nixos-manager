@@ -21,9 +21,30 @@ executable nixos-manager
                      , NixManager.Admin.Update
                      , NixManager.Admin.ValidRebuildModes
                      , NixManager.Admin.View
-                     , NixManager.Changes
+                     , NixManager.ChangeType
                      , NixManager.Constants
                      , NixManager.Docbook
+                     , NixManager.HMAdmin.BuildState
+                     , NixManager.HMAdmin.DetailsState
+                     , NixManager.HMAdmin.Event
+                     , NixManager.HMAdmin.GarbageData
+                     , NixManager.HMAdmin.RebuildData
+                     , NixManager.HMAdmin.State
+                     , NixManager.HMAdmin.Update
+                     , NixManager.HMAdmin.View
+                     , NixManager.HMGarbage
+                     , NixManager.HMPackagesUtil
+                     , NixManager.HMPackages.State
+                     , NixManager.HMPackages.View
+                     , NixManager.HMPackages.Update
+                     , NixManager.HMPackages.Event
+                     , NixManager.HMRebuild
+                     , NixManager.HMRebuildMode
+                     , NixManager.HMServicesUtil
+                     , NixManager.HMServices.State
+                     , NixManager.HMServices.View
+                     , NixManager.HMServices.Update
+                     , NixManager.HMServices.Event
                      , NixManager.ManagerEvent
                      , NixManager.ManagerMain
                      , NixManager.ManagerState
@@ -33,22 +54,25 @@ executable nixos-manager
                      , NixManager.NixLocation
                      , NixManager.NixPackage
                      , NixManager.NixPackageMeta
+                     , NixManager.NixPackageSearch
                      , NixManager.NixPackageStatus
-                     , NixManager.NixPackages
+                     , NixManager.NixPackagesUtil
                      , NixManager.NixRebuild
+                     , NixManager.NixService
                      , NixManager.NixRebuildMode
                      , NixManager.NixRebuildUpdateMode
-                     , NixManager.NixService
                      , NixManager.NixServiceOption
                      , NixManager.NixServiceOptionType
+                     , NixManager.NixServicesUtil
                      , NixManager.Packages.Event
-                     , NixManager.Packages.PackageCategory
                      , NixManager.Packages.State
                      , NixManager.Packages.Update
                      , NixManager.Packages.View
                      , NixManager.Password
+                     , NixManager.PackageCategory
                      , NixManager.PosixTools
                      , NixManager.Process
+                     , NixManager.ProgramArguments
                      , NixManager.AskPass
                      , NixManager.Services.Download
                      , NixManager.Services.Event
@@ -67,8 +91,10 @@ executable nixos-manager
                      , NixManager.View.IconName
                      , NixManager.View.ImageButton
                      , NixManager.View.InformationBox
+                     , NixManager.View.PackageEditView
                      , NixManager.View.ProgressBar
                      , NixManager.View.Root
+                     , NixManager.View.ServiceEditView
   build-depends:       base
                      , containers
                      , gi-gdk
@@ -100,4 +126,4 @@ executable nixos-manager
   hs-source-dirs:    src
   default-language:  Haskell2010
   build-tools:       hlint, cabal-install, brittany
-  ghc-options:       -Wall -threaded -Wno-unused-imports
+  ghc-options:       -Wall -threaded -Wno-missing-signatures

@@ -5,6 +5,7 @@ Provides a thin layer above "System.Process" - there’s probably something nice
   -}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE OverloadedStrings #-}
 module NixManager.Process
   ( ProcessOutput
   , ProcessData
@@ -41,7 +42,6 @@ import           System.Process                 ( ProcessHandle
                                                 , CmdSpec(ShellCommand)
                                                 , StdStream(CreatePipe)
                                                 , terminateProcess
-                                                , interruptProcessGroupOf
                                                 , waitForProcess
                                                 )
 import           System.IO                      ( Handle )
@@ -50,6 +50,8 @@ import           NixManager.Bash                ( Expr
                                                 , evalExpr
                                                 )
 import           Data.Text                      ( unpack )
+import           Data.Text.IO                   ( putStrLn )
+import           Prelude                 hiding ( putStrLn )
 
 -- | Represents all the data needed to handle a running process
 data ProcessData = ProcessData {
@@ -101,6 +103,7 @@ runProcessToFinish stdinString command = do
 -- | Start a process, potentially feeding a constant amount of data into stdin, and return the data to manage it further.
 runProcess :: Maybe ByteString -> Expr -> IO ProcessData
 runProcess stdinString command = do
+  putStrLn ("Executing: " <> evalExpr command)
   (Just hin, Just hout, Just herr, ph) <- createProcess $ CreateProcess
     { cmdspec            = exprToCmdSpec command
     , cwd                = Nothing

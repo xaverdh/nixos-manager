@@ -2,7 +2,7 @@
   Description: Contains the event type for all events corresponding to the Packages tab
 Contains the event type for all events corresponding to the Packages tab
   -}
-module NixManager.Packages.Event
+module NixManager.HMPackages.Event
   ( Event(..)
   )
 where

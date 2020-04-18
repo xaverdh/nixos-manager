@@ -13,13 +13,11 @@ module NixManager.Services.Download
   )
 where
 
-import           Network.HTTP.Client            ( HttpException )
 import           Prelude                 hiding ( writeFile )
 import           System.FilePath                ( dropFileName )
 import           System.Directory               ( createDirectoryIfMissing )
 import           NixManager.NixServiceOption    ( desiredOptionsFileLocation )
 import           Control.Exception              ( try
-                                                , Exception
                                                 , SomeException
                                                 )
 import           Network.Wreq                   ( get

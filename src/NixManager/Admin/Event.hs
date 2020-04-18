@@ -13,7 +13,7 @@ import           NixManager.Process             ( ProcessData
                                                 )
 import           NixManager.Admin.DetailsState  ( DetailsState )
 import           System.Exit                    ( ExitCode )
-import           NixManager.Changes             ( ChangeType )
+import           NixManager.ChangeType          ( ChangeType )
 import           NixManager.Password            ( Password )
 
 data Event = EventRebuild -- ^ Triggered by the Rebuild button. Starts the password query.

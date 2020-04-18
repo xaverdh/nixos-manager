@@ -19,25 +19,21 @@ import           NixManager.Password            ( Password
 import           NixManager.AskPass             ( sudoExpr )
 import           NixManager.Constants           ( rootManagerPath )
 import           Data.Text.Encoding             ( encodeUtf8 )
-import           NixManager.Util                ( showText
-                                                , mwhen
-                                                )
 import           NixManager.PosixTools          ( mkdir
                                                 , cp
                                                 , mv
                                                 )
 import           NixManager.Bash                ( Expr(Command, Subshell)
-                                                , Arg(LiteralArg)
                                                 , (||.)
                                                 , (&&.)
                                                 , (>>.)
                                                 , devNullify
                                                 )
 import           Prelude                 hiding ( readFile )
-import           NixManager.NixPackages         ( locateLocalPackagesFileMaybeCreate
+import           NixManager.NixPackagesUtil     ( locateLocalPackagesFileMaybeCreate
                                                 , locateRootPackagesFile
                                                 )
-import           NixManager.NixService          ( locateLocalServicesFileMaybeCreate
+import           NixManager.NixServicesUtil     ( locateLocalServicesFileMaybeCreate
                                                 , locateRootServicesFile
                                                 )
 import           NixManager.Process             ( runProcess
@@ -47,7 +43,6 @@ import           NixManager.Process             ( runProcess
 import           System.FilePath                ( (-<.>) )
 import           NixManager.NixRebuildMode      ( NixRebuildMode
                                                 , isDry
-                                                , rebuildModeToText
                                                 )
 import           NixManager.NixRebuildUpdateMode
                                                 ( NixRebuildUpdateMode

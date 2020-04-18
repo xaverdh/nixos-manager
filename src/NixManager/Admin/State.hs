@@ -1,19 +1,19 @@
+{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-|
   Description: Contains all the state for the Administration tab
   -}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE OverloadedStrings #-}
 module NixManager.Admin.State
   ( State(..)
   , asChanges
   , asRebuildData
   , asGarbageData
   , initState
+  , determineChanges
   )
 where
 
-import           NixManager.Changes             ( ChangeType
-                                                , determineChanges
+import           NixManager.ChangeType          ( ChangeType(Changes, NoChanges)
                                                 )
 import           Control.Lens                   ( makeLenses )
 import           NixManager.Admin.RebuildData   ( RebuildData
@@ -22,6 +22,13 @@ import           NixManager.Admin.RebuildData   ( RebuildData
 import           NixManager.Admin.GarbageData   ( GarbageData
                                                 , initialGarbageData
                                                 )
+import           NixManager.NixServicesUtil     ( locateLocalServicesFile
+                                                , locateRootServicesFile
+                                                )
+import           NixManager.NixPackagesUtil     ( locateLocalPackagesFile
+                                                , locateRootPackagesFile
+                                                )
+import           NixManager.Util                ( determineFilesEqual )
 
 -- | Contains all the state for the administration tab
 data State = State {
@@ -31,6 +38,17 @@ data State = State {
   }
 
 makeLenses ''State
+
+
+-- | Determine if there are changes that have to be applied.
+determineChanges :: IO ChangeType
+determineChanges = do
+  packagesEqual <- determineFilesEqual locateLocalPackagesFile
+                                       locateRootPackagesFile
+  servicesEqual <- determineFilesEqual locateLocalServicesFile
+                                       locateRootServicesFile
+  pure (if packagesEqual && servicesEqual then NoChanges else Changes)
+
 
 -- | The initial Administation tab state (needs to determine changes, hence the side-effect)
 initState :: IO State
